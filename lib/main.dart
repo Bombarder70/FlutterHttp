@@ -52,19 +52,29 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> _planets = [];
 
-  void _loadData() async {
-    var url = Uri.parse('https://swapi.dev/api/planets/');
-    var response = await http.get(url);
+  void _removeItem(String name) {
+    setState(() {
+      _planets.removeWhere((item) => item['name'] == name);
+    });
+  }
 
-    var res = convert.jsonDecode(response.body) as Map<String, dynamic>;
+  void _loadData() async {
+    // Parsovanie URL pre pouzitie v get()
+    var url = Uri.parse('https://swapi.dev/api/planets/');
+
+    Future<http.Response> fr = http.get(url);
+
+    // Async pre ziskanie dat
+    http.Response res = await fr;
+
+    // Do retazca sa nahra telo stranky cize JSON
+    String data = res.body;
+
+    // Sting sa Decoduje do pola
+    Map<String, dynamic> dataMap = convert.jsonDecode(data);
 
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _planets = res['results'];
+      _planets = dataMap['results'];
     });
   }
 
@@ -85,9 +95,43 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView.builder(
         itemCount: _planets.length,
         itemBuilder: (BuildContext context, int i) => Card(
-          child: Container(
-            child: Text(_planets[i]['name']),
-            padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  child: Text(
+                    _planets[i]['name'],
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                ),
+              ),
+              Column(
+                children: [
+                  Container(
+                    child: const Text(
+                      "Population",
+                      style: TextStyle(fontSize: 15, color: Colors.blue),
+                    ),
+                    padding: const EdgeInsets.only(top: 10, right: 5),
+                  ),
+                  Container(
+                    child: Text(_planets[i]['population']),
+                    padding: const EdgeInsets.all(10),
+                  ),
+                ],
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                ),
+                tooltip: 'Increase volume by 10',
+                onPressed: () {
+                  _removeItem(_planets[i]['name']);
+                },
+              ),
+            ],
           ),
         ),
       ),
