@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Flutter loading items'),
     );
   }
 }
@@ -53,7 +53,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> _planets = [];
   String nextPage = "";
-  int _count = 0;
   int loadedPage = 1;
 
   List<dynamic> _allPlanets = [];
@@ -82,7 +81,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<bool> _loadMore() async {
-    _count++;
     await Future.delayed(Duration(seconds: 0, milliseconds: 500));
     _loadData();
 
@@ -105,7 +103,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Map<String, dynamic> dataMap = convert.jsonDecode(data);
 
     var results = dataMap['results'];
-    nextPage = dataMap['next'];
+
+    if (dataMap['next'] != null) {
+      nextPage = dataMap['next'];
+    } else {
+      nextPage = "stop";
+    }
 
     if (loadedPage > 1) {
       mergeData(results);
@@ -133,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: LoadMore(
-        isFinish: _count > 3,
+        isFinish: nextPage == "stop",
         onLoadMore: _loadMore,
         child: ListView.builder(
           itemCount: _planets.length,
@@ -152,9 +155,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 Column(
                   children: [
                     Container(
-                      child: const Text(
+                      child: Text(
                         "Population",
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.purple,
+                        ),
                       ),
                       padding: const EdgeInsets.only(top: 10, right: 5),
                     ),
@@ -165,11 +171,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
                 IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.delete,
-                    color: Colors.red,
+                    color: Colors.pink[300],
                   ),
-                  tooltip: 'Increase volume by 10',
+                  tooltip: 'Remove item',
                   onPressed: () {
                     _removeItem(_planets[i]['name']);
                   },
