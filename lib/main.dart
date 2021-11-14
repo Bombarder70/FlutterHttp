@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'package:loadmore/loadmore.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,6 +52,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> _planets = [];
+  String nextPage = "";
+  int _count = 0;
+  int loadedPage = 1;
+
+  List<dynamic> _allPlanets = [];
 
   void _removeItem(String name) {
     setState(() {
@@ -58,9 +64,34 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  String loadUrl() {
+    String url;
+    if (_planets.length > 0 && nextPage != "") {
+      loadedPage++;
+
+      url = nextPage;
+    } else {
+      url = "https://swapi.dev/api/planets/";
+    }
+
+    return url;
+  }
+
+  void mergeData(planets) {
+    _allPlanets.addAll(planets);
+  }
+
+  Future<bool> _loadMore() async {
+    _count++;
+    await Future.delayed(Duration(seconds: 0, milliseconds: 500));
+    _loadData();
+
+    return true;
+  }
+
   void _loadData() async {
     // Parsovanie URL pre pouzitie v get()
-    var url = Uri.parse('https://swapi.dev/api/planets/');
+    var url = Uri.parse(loadUrl());
 
     Future<http.Response> fr = http.get(url);
 
@@ -73,8 +104,17 @@ class _MyHomePageState extends State<MyHomePage> {
     // Sting sa Decoduje do pola
     Map<String, dynamic> dataMap = convert.jsonDecode(data);
 
+    var results = dataMap['results'];
+    nextPage = dataMap['next'];
+
+    if (loadedPage > 1) {
+      mergeData(results);
+    } else {
+      _allPlanets = results;
+    }
+
     setState(() {
-      _planets = dataMap['results'];
+      _planets = _allPlanets;
     });
   }
 
@@ -92,54 +132,58 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: ListView.builder(
-        itemCount: _planets.length,
-        itemBuilder: (BuildContext context, int i) => Card(
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  child: Text(
-                    _planets[i]['name'],
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                ),
-              ),
-              Column(
-                children: [
-                  Container(
-                    child: const Text(
-                      "Population",
-                      style: TextStyle(fontSize: 15, color: Colors.blue),
+      body: LoadMore(
+        isFinish: _count > 3,
+        onLoadMore: _loadMore,
+        child: ListView.builder(
+          itemCount: _planets.length,
+          itemBuilder: (BuildContext context, int i) => Card(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    child: Text(
+                      _planets[i]['name'],
+                      style: const TextStyle(fontSize: 20),
                     ),
-                    padding: const EdgeInsets.only(top: 10, right: 5),
-                  ),
-                  Container(
-                    child: Text(_planets[i]['population']),
                     padding: const EdgeInsets.all(10),
                   ),
-                ],
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
                 ),
-                tooltip: 'Increase volume by 10',
-                onPressed: () {
-                  _removeItem(_planets[i]['name']);
-                },
-              ),
-            ],
+                Column(
+                  children: [
+                    Container(
+                      child: const Text(
+                        "Population",
+                        style: TextStyle(fontSize: 15, color: Colors.blue),
+                      ),
+                      padding: const EdgeInsets.only(top: 10, right: 5),
+                    ),
+                    Container(
+                      child: Text(_planets[i]['population']),
+                      padding: const EdgeInsets.all(10),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  tooltip: 'Increase volume by 10',
+                  onPressed: () {
+                    _removeItem(_planets[i]['name']);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _loadData,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      //floatingActionButton: FloatingActionButton(
+      //  onPressed: _loadData,
+      //  tooltip: 'Increment',
+      //  child: const Icon(Icons.add),
+      //), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
