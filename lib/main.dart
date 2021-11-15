@@ -81,26 +81,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<bool> _loadMore() async {
-    await Future.delayed(Duration(seconds: 0, milliseconds: 500));
+    await Future.delayed(const Duration(seconds: 0, milliseconds: 500));
     _loadData();
 
     return true;
   }
 
   void _loadData() async {
-    // Parsovanie URL pre pouzitie v get()
     var url = Uri.parse(loadUrl());
-
-    Future<http.Response> fr = http.get(url);
-
-    // Async pre ziskanie dat
-    http.Response res = await fr;
-
-    // Do retazca sa nahra telo stranky cize JSON
-    String data = res.body;
+    var res = await http.get(url);
 
     // Sting sa Decoduje do pola
-    Map<String, dynamic> dataMap = convert.jsonDecode(data);
+    Map<String, dynamic> dataMap = convert.jsonDecode(res.body);
 
     var results = dataMap['results'];
 
