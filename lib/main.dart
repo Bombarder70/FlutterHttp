@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Column(
                   children: [
                     Container(
-                      child: Text(
+                      child: const Text(
                         "Population",
                         style: TextStyle(
                           fontSize: 15,
@@ -176,6 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
+        textBuilder: DefaultLoadMoreTextBuilder.english,
       ),
       //floatingActionButton: FloatingActionButton(
       //  onPressed: _loadData,
