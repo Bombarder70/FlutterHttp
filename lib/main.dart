@@ -133,46 +133,58 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView.builder(
           itemCount: _planets.length,
           itemBuilder: (BuildContext context, int i) => Card(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    child: Text(
-                      _planets[i]['name'],
-                      style: const TextStyle(fontSize: 20),
+            child: InkWell(
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<SecondPage>(
+                    builder: (BuildContext context) => SecondPage(
+                      planet: _planets[i]['name'],
                     ),
-                    padding: const EdgeInsets.all(10),
                   ),
                 ),
-                Column(
-                  children: [
-                    Container(
-                      child: const Text(
-                        "Population",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.purple,
-                        ),
+              },
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      child: Text(
+                        _planets[i]['name'],
+                        style: const TextStyle(fontSize: 20),
                       ),
-                      padding: const EdgeInsets.only(top: 10, right: 5),
-                    ),
-                    Container(
-                      child: Text(_planets[i]['population']),
                       padding: const EdgeInsets.all(10),
                     ),
-                  ],
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.delete,
-                    color: Colors.pink[300],
                   ),
-                  tooltip: 'Remove item',
-                  onPressed: () {
-                    _removeItem(_planets[i]['name']);
-                  },
-                ),
-              ],
+                  Column(
+                    children: [
+                      Container(
+                        child: const Text(
+                          "Population",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.purple,
+                          ),
+                        ),
+                        padding: const EdgeInsets.only(top: 10, right: 5),
+                      ),
+                      Container(
+                        child: Text(_planets[i]['population']),
+                        padding: const EdgeInsets.all(10),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.pink[300],
+                    ),
+                    tooltip: 'Remove item',
+                    onPressed: () {
+                      _removeItem(_planets[i]['name']);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -183,6 +195,31 @@ class _MyHomePageState extends State<MyHomePage> {
       //  tooltip: 'Increment',
       //  child: const Icon(Icons.add),
       //), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class SecondPage extends StatefulWidget {
+  final String planet;
+
+  const SecondPage({Key? key, required this.planet}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => SecondPageState();
+}
+
+class SecondPageState extends State<SecondPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second Page'),
+      ),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+        alignment: Alignment.center,
+        child: Text(widget.planet),
+      ),
     );
   }
 }
