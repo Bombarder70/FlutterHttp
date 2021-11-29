@@ -92,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var res = await http.get(url);
 
     // Sting sa Decoduje do pola
-    Map<String, dynamic> dataMap = convert.jsonDecode(res.body);
+    final Map dataMap = convert.jsonDecode(res.body);
 
     var results = dataMap['results'];
 
@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   context,
                   MaterialPageRoute<SecondPage>(
                     builder: (BuildContext context) => SecondPage(
-                      planet: _planets[i]['name'],
+                      planetDetail: _planets[i],
                     ),
                   ),
                 ),
@@ -200,10 +200,9 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class SecondPage extends StatefulWidget {
-  final String planet;
+  final Map planetDetail;
 
-  const SecondPage({Key? key, required this.planet}) : super(key: key);
-
+  const SecondPage({Key? key, required this.planetDetail}) : super(key: key);
   @override
   State<StatefulWidget> createState() => SecondPageState();
 }
@@ -218,7 +217,7 @@ class SecondPageState extends State<SecondPage> {
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         alignment: Alignment.center,
-        child: Text(widget.planet),
+        child: Text(widget.planetDetail['name']),
       ),
     );
   }
