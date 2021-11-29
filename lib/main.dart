@@ -212,13 +212,117 @@ class SecondPageState extends State<SecondPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Second Page'),
+        title: Text("Planet: " + widget.planetDetail['name']),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-        alignment: Alignment.center,
-        child: Text(widget.planetDetail['name']),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              alignment: Alignment(-.2, 0),
+              image: NetworkImage(
+                  'https://w0.peakpx.com/wallpaper/527/433/HD-wallpaper-space-draw-black-planet-stars.jpg'),
+              fit: BoxFit.cover),
+        ),
+        alignment: Alignment.bottomCenter,
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Column(
+          children: [
+            Container(
+              color: Colors.grey[100],
+              margin: const EdgeInsets.all(30),
+              alignment: Alignment.center,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 50,
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    widget.planetDetail['name'],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.purple,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.grey[100],
+              margin: const EdgeInsets.all(30),
+              padding: const EdgeInsets.all(10),
+              alignment: Alignment.center,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 50,
+                ),
+                child: Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        PlanetInfo(
+                          title: "Name",
+                          col: widget.planetDetail['name'],
+                        ),
+                        PlanetInfo(
+                          title: "Population",
+                          col: widget.planetDetail['population'],
+                        ),
+                        PlanetInfo(
+                          title: "Rotation period",
+                          col: widget.planetDetail['rotation_period'],
+                        ),
+                        PlanetInfo(
+                          title: "Orbital period",
+                          col: widget.planetDetail['orbital_period'],
+                        ),
+                        PlanetInfo(
+                          title: "Diameter",
+                          col: widget.planetDetail['diameter'],
+                        )
+                      ],
+                    )),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+}
+
+class PlanetInfo extends StatelessWidget {
+  final String title;
+  final String col;
+
+  const PlanetInfo({
+    Key? key,
+    required this.title,
+    required this.col,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Container(
+        child: Text(
+          title,
+          style: const TextStyle(color: Colors.black, fontSize: 22),
+        ),
+        padding: const EdgeInsets.only(top: 15),
+      ),
+      Container(
+        padding: const EdgeInsets.only(top: 5),
+        child: Text(
+          col,
+          style: const TextStyle(
+            color: Colors.purple,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ]);
   }
 }
