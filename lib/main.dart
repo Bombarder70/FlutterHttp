@@ -123,9 +123,11 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        backgroundColor: Colors.orange,
+        title: Text(
+          widget.title,
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: LoadMore(
         isFinish: nextPage == "stop",
@@ -162,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           "Population",
                           style: TextStyle(
                             fontSize: 15,
-                            color: Colors.purple,
+                            color: Colors.orange,
                           ),
                         ),
                         padding: const EdgeInsets.only(top: 10, right: 5),
@@ -212,77 +214,87 @@ class SecondPageState extends State<SecondPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Planet: " + widget.planetDetail['name']),
+        title: Text(
+          "Planet: " + widget.planetDetail['name'],
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.orange,
       ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-              alignment: Alignment(-.2, 0),
-              image: NetworkImage(
-                  'https://w0.peakpx.com/wallpaper/527/433/HD-wallpaper-space-draw-black-planet-stars.jpg'),
-              fit: BoxFit.cover),
+            alignment: Alignment(-.2, 0),
+            image: NetworkImage(
+                'https://w0.peakpx.com/wallpaper/527/433/HD-wallpaper-space-draw-black-planet-stars.jpg'),
+            fit: BoxFit.cover,
+          ),
         ),
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.only(bottom: 20),
         child: Column(
           children: [
             Container(
-              color: Colors.grey[100],
               margin: const EdgeInsets.all(30),
               alignment: Alignment.center,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: 50,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(5.0),
+                border: Border.all(
+                  color: Colors.orange,
+                  width: 3.0,
                 ),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    widget.planetDetail['name'],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.purple,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  widget.planetDetail['name'],
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.orange,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
             Container(
-              color: Colors.grey[100],
               margin: const EdgeInsets.all(30),
               padding: const EdgeInsets.all(10),
               alignment: Alignment.center,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: 50,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(5.0),
+                border: Border.all(
+                  color: Colors.orange,
+                  width: 3.0,
                 ),
-                child: Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      children: [
-                        PlanetInfo(
-                          title: "Name",
-                          col: widget.planetDetail['name'],
-                        ),
-                        PlanetInfo(
-                          title: "Population",
-                          col: widget.planetDetail['population'],
-                        ),
-                        PlanetInfo(
-                          title: "Rotation period",
-                          col: widget.planetDetail['rotation_period'],
-                        ),
-                        PlanetInfo(
-                          title: "Orbital period",
-                          col: widget.planetDetail['orbital_period'],
-                        ),
-                        PlanetInfo(
-                          title: "Diameter",
-                          col: widget.planetDetail['diameter'],
-                        )
-                      ],
-                    )),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    PlanetInfo(
+                      title: "Name",
+                      col: widget.planetDetail['name'],
+                    ),
+                    PlanetInfo(
+                      title: "Population",
+                      col: widget.planetDetail['population'],
+                    ),
+                    PlanetInfo(
+                      title: "Rotation period",
+                      col: widget.planetDetail['rotation_period'],
+                    ),
+                    PlanetInfo(
+                      title: "Orbital period",
+                      col: widget.planetDetail['orbital_period'],
+                    ),
+                    PlanetInfo(
+                      title: "Diameter",
+                      col: widget.planetDetail['diameter'],
+                    )
+                  ],
+                ),
               ),
             ),
           ],
@@ -317,7 +329,7 @@ class PlanetInfo extends StatelessWidget {
         child: Text(
           col,
           style: const TextStyle(
-            color: Colors.purple,
+            color: Colors.orange,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
